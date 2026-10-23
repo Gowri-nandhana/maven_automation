@@ -1,13 +1,31 @@
-@Test 
+package com.devops.lab;
 
-public void verifySystemBottleneckValidation() { 
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-booleanconstraintDefectDetected = true; 
+public class AppTest {
 
-// Intentionally assertion failure simulating a major production integration blocker 
+    @Test
+    public void verifySystemEnvironmentExecution() {
+        assertTrue(true);
+    }
 
-org.junit.jupiter.api.Assertions.assertFalse(constraintDefectDetected,  
+    @Test
+    public void verifyPipelineVelocityCalculation() {
+        int leadTimeDays = 10;
+        int targetWasteReductionDays = 3;
+        int optimizedCycleTime = leadTimeDays - targetWasteReductionDays;
 
-"CRITICAL: System bottleneck or defect detected in value stream!"); 
+        assertEquals(7, optimizedCycleTime);
+    }
+    @Test
+    public void verifySystemBottleneckValidation() {
+        boolean constraintDefectDetected = true;
 
-    } 
+        org.junit.jupiter.api.Assertions.assertFalse(
+            constraintDefectDetected,
+            "CRITICAL: System bottleneck or defect detected in value stream!"
+        );
+    }
+}
