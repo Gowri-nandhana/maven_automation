@@ -49,7 +49,38 @@ jobs:
       - name: Set up Docker Compose
         uses: docker/setup-compose-action@v1
 
+      - name: Check Docker Compose File
+        run: |
+          echo "Current directory:"
+          pwd
+          echo "Repository files:"
+          ls -la
+          echo "Searching for Compose files:"
+          find . -maxdepth 4 \( -name "docker-compose.yml" -o -name "compose.yaml" -o -name "compose.yml" \) -print
+
+      - name: Validate Docker Compose Configuration
+        run: |
+          if [ -f docker-compose.yml ]; then
+            docker compose -f docker-compose.yml config
+          elif [ -f compose.yaml ]; then
+            docker compose -f compose.yaml config
+          elif [ -f compose.yml ]; then
+            docker compose -f compose.yml config
+          else
+            echo "ERROR: No Compose file found in the repository root."
+            exit 1
+          fi
+
       - name: Deploy to Production Environment
         run: |
-          echo "CI tests passed. Deploying straight to Production automatically..."
-          docker compose -f docker-compose.yml up -d --build --force-recreate
+          echo "CI tests passed. Deploying automatically..."
+          if [ -f docker-compose.yml ]; then
+            docker compose -f docker-compose.yml up -d --build --force-recreate
+          elif [ -f compose.yaml ]; then
+            docker compose -f compose.yaml up -d --build --force-recreate
+          elif [ -f compose.yml ]; then
+            docker compose -f compose.yml up -d --build --force-recreate
+          else
+            echo "ERROR: Compose configuration file not found."
+            exit 1
+          fi
